@@ -5,7 +5,7 @@ import java.util.List;
 public class ProductDTO {
     private String name;
     private String description;
-    private boolean allerg;
+    private String allerg;
     private int stock;
     private double amount;
     private String imgURl;
@@ -28,7 +28,7 @@ public class ProductDTO {
         return description;
     }
 
-    public boolean isAllerg() {
+    public String getAllerg() {
         return allerg;
     }
 

@@ -3,7 +3,7 @@ package com.redhood.fornebu_pizza_backend.service;
 import com.redhood.fornebu_pizza_backend.entity.Category;
 import com.redhood.fornebu_pizza_backend.repository.CategoryRepository;
 import com.redhood.fornebu_pizza_backend.resources.CategoryResource;
-import com.redhood.fornebu_pizza_backend.resources.CategoryNameOnlyResource;
+import com.redhood.fornebu_pizza_backend.resources.CategoryBasicResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,10 +19,11 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<CategoryResource> getAllCategories() {
+    public List<CategoryResource> getAllCategoriesHasProduct() {
         List<Category> categories = categoryRepository.findAll();
 
         return categories.stream()
+                .filter(category -> !category.getProducts().isEmpty())
                 .map(category -> new CategoryResource(
                         category.getId(),
                         category.getName(),
@@ -32,13 +33,26 @@ public class CategoryService {
 
     }
 
-    public List<CategoryNameOnlyResource> getAllCategoryNamesAndIds() {
+    public List<CategoryBasicResource> getAllBasicCategoryHasProduct() {
         // Fetch all categories from the repository
         List<Category> categories = categoryRepository.findAll();
 
         // Map Category entities to CategoryResources
-        List<CategoryNameOnlyResource> categoryResources = categories.stream()
-                .map(category -> new CategoryNameOnlyResource(category.getId(), category.getName()))
+        List<CategoryBasicResource> categoryResources = categories.stream()
+                .filter(category -> !category.getProducts().isEmpty())
+                .map(category -> new CategoryBasicResource(category.getId(), category.getName(),category.getProducts().size()))
+                .collect(Collectors.toList());
+
+        return categoryResources;
+    }
+
+    public List<CategoryBasicResource> getAllBasicCategory() {
+        // Fetch all categories from the repository
+        List<Category> categories = categoryRepository.findAll();
+
+        // Map Category entities to CategoryResources
+        List<CategoryBasicResource> categoryResources = categories.stream()
+                .map(category -> new CategoryBasicResource(category.getId(), category.getName(),category.getProducts().size()))
                 .collect(Collectors.toList());
 
         return categoryResources;
@@ -51,6 +65,14 @@ public class CategoryService {
     public Category createCategory(Category category) {
         return categoryRepository.save(category);
     }
+
+    public Category updateCategory(Long id, Category updatedCategory) {
+        return categoryRepository.findById(id).map(category -> {
+            category.setName(updatedCategory.getName()); // Update the category name
+            return categoryRepository.save(category);
+        }).orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
+    }
+
 
     public void deleteCategory(Long id) {
         categoryRepository.deleteById(id);

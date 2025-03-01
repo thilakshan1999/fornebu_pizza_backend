@@ -31,6 +31,21 @@ public class ProductService {
                 .map(ProductResource::new)
                 .collect(Collectors.toList());
     }
+    public List<ProductResource> getAllProductsWithFilter(Long categoryId) {
+        List<Product> products;
+
+        if (categoryId == null) {
+            // If categoryId is null, return all products
+            products = productRepository.findAll();
+        } else {
+            // Otherwise, filter products by category_id
+            products = productRepository.findByCategoryId(categoryId);
+        }
+
+        return products.stream()
+                .map(ProductResource::new)
+                .collect(Collectors.toList());
+    }
 
     // ✅ Updated: Get product by ID as ProductResource
     public Optional<ProductResource> getProductById(Long id) {
@@ -40,52 +55,74 @@ public class ProductService {
                 .map(ProductResource::new);
     }
 
+    public List<ProductResource> searchProducts(String keyword) {
+        List<Product> products = productRepository.searchByKeyword(keyword);
+        return products.stream()
+                .map(ProductResource::new)
+                .collect(Collectors.toList());
+    }
+
     public Product saveProduct(ProductDTO productDTO) {
+        Product product = new Product();
+        return createOrUpdateProduct(product, productDTO);
+    }
+
+    public Product updateProduct(Long productId, ProductDTO productDTO) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        return createOrUpdateProduct(product, productDTO);
+    }
+
+    private Product createOrUpdateProduct(Product product, ProductDTO productDTO) {
         Category category = categoryService.getCategoryById(productDTO.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
 
-        Product product = new Product();
         product.setName(productDTO.getName());
         product.setDescription(productDTO.getDescription());
-        product.setAllerg(productDTO.isAllerg());
+        product.setAllerg(productDTO.getAllerg());
         product.setStock(productDTO.getStock());
         product.setAmount(productDTO.getAmount());
         product.setImgURl(productDTO.getImgURl());
         product.setCategory(category);
 
-        //setSelectOptions
+        // Set Select Options
         if (productDTO.getSelectOptions() != null) {
-            List<ProductSelectOption> options = new ArrayList<>();
-            for (ProductOptionDTO selectOptionDTO : productDTO.getSelectOptions()) {
-                ProductSelectOption option = new ProductSelectOption();
-                option.setName(selectOptionDTO.getName());
-                option.setPrize(selectOptionDTO.getPrice());
-                option.setProduct(product);  // Link the option to the product
-                options.add(option);
-            }
+            List<ProductSelectOption> options = productDTO.getSelectOptions().stream()
+                    .map(optionDTO -> {
+                        ProductSelectOption option = new ProductSelectOption();
+                        option.setName(optionDTO.getName());
+                        option.setPrize(optionDTO.getPrice());
+                        option.setProduct(product);
+                        return option;
+                    })
+                    .collect(Collectors.toList());
             product.setSelectOptions(options);
         }
 
+        // Set Deselect Options
         product.setDeselectOptions(productDTO.getDeselectOptions());
 
-        //setExtraDressing
+        // Set Extra Dressings
         if (productDTO.getExtraDressings() != null) {
-            List<ProductExtraDressing> options = new ArrayList<>();
-            for (ProductOptionDTO extraDressingDTO : productDTO.getExtraDressings()) {
-                ProductExtraDressing option = new ProductExtraDressing();
-                option.setName(extraDressingDTO.getName());
-                option.setPrize(extraDressingDTO.getPrice());
-                option.setProduct(product);  // Link the option to the product
-                options.add(option);
-            }
-            product.setExtraDressing(options);
+            List<ProductExtraDressing> dressings = productDTO.getExtraDressings().stream()
+                    .map(dressingDTO -> {
+                        ProductExtraDressing dressing = new ProductExtraDressing();
+                        dressing.setName(dressingDTO.getName());
+                        dressing.setPrize(dressingDTO.getPrice());
+                        dressing.setProduct(product);
+                        return dressing;
+                    })
+                    .collect(Collectors.toList());
+            product.setExtraDressing(dressings);
         }
 
+        // Set Extras (linked products)
         if (productDTO.getExtras() != null && !productDTO.getExtras().isEmpty()) {
             List<Product> extraProducts = productRepository.findAllById(productDTO.getExtras());
             product.setExtras(extraProducts);
         }
 
+        // Set Add Drinks (linked products)
         if (productDTO.getAddDrinks() != null && !productDTO.getAddDrinks().isEmpty()) {
             List<Product> addDrinkProducts = productRepository.findAllById(productDTO.getAddDrinks());
             product.setAddDrinks(addDrinkProducts);

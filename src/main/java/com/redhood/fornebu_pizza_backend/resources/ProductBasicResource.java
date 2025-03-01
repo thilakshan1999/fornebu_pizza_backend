@@ -7,10 +7,13 @@ public class ProductBasicResource {
     private String name;
     private double amount;
 
+    private int stock;
+
     public ProductBasicResource(Product product) {
         this.id = product.getId();
         this.name = product.getName();
         this.amount = product.getAmount();
+        this.stock = product.getStock();
     }
 
     public Long getId() {
@@ -23,5 +26,9 @@ public class ProductBasicResource {
 
     public double getAmount() {
         return amount;
+    }
+
+    public int getStock() {
+        return stock;
     }
 }

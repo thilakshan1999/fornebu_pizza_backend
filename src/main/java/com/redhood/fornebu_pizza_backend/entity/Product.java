@@ -14,7 +14,7 @@ public class Product {
     private Long id;
     private String name;
     private String description;
-    private boolean allerg;
+    private String allerg;
     private int stock;
     private double amount;
     private String imgURl;
@@ -65,7 +65,7 @@ public class Product {
         return description;
     }
 
-    public boolean isAllerg() {
+    public String getAllerg() {
         return allerg;
     }
 
@@ -113,7 +113,7 @@ public class Product {
         this.description = description;
     }
 
-    public void setAllerg(boolean allerg) {
+    public void setAllerg(String allerg) {
         this.allerg = allerg;
     }
 

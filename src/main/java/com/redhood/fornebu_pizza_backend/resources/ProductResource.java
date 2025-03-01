@@ -11,7 +11,7 @@ public class ProductResource {
     private Long id;
     private String name;
     private String description;
-    private boolean allerg;
+    private String allerg;
     private int stock;
     private double amount;
     private String imgURl;
@@ -32,7 +32,7 @@ public class ProductResource {
         this.id = product.getId();
         this.name = product.getName();
         this.description = product.getDescription();
-        this.allerg = product.isAllerg();
+        this.allerg = product.getAllerg();
         this.stock = product.getStock();
         this.amount = product.getAmount();
         this.imgURl = product.getImgURl();
@@ -63,7 +63,8 @@ public class ProductResource {
         return description;
     }
 
-    public boolean isAllerg() {
+
+    public String getAllerg() {
         return allerg;
     }
 

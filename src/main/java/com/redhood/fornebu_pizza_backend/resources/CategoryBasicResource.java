@@ -1,13 +1,15 @@
 package com.redhood.fornebu_pizza_backend.resources;
 
-public class CategoryNameOnlyResource {
+public class CategoryBasicResource {
     private Long id;
     private String name;
+    private int productCount;
 
     // Constructor
-    public CategoryNameOnlyResource(Long id, String name) {
+    public CategoryBasicResource(Long id, String name,int productCount) {
         this.id = id;
         this.name = name;
+        this.productCount = productCount;
     }
 
     // Getters and Setters
@@ -25,5 +27,13 @@ public class CategoryNameOnlyResource {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getProductCount() {
+        return productCount;
+    }
+
+    public void setProductCount(int productCount) {
+        this.productCount = productCount;
     }
 }
