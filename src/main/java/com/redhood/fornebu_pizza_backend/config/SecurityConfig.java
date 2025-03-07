@@ -36,10 +36,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/product/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/product/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/product/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/orders/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/orders/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/orders/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/orders/**").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/orders/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new FirebaseAuthFilter(firebaseAuthService,firestore), UsernamePasswordAuthenticationFilter.class);

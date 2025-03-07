@@ -33,7 +33,7 @@ public class OrderService {
                 .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
     }
 
-    public List<OrderSimpleResource> getSimpleOrdersByUserId(Long uid) {
+    public List<OrderSimpleResource> getSimpleOrdersByUserId(String uid) {
         return orderRepository.findSimpleOrdersByUid(uid);
     }
 

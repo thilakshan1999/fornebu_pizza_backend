@@ -27,7 +27,7 @@ public class OrderController {
     }
 
     @GetMapping("/user/{uid}")
-    public List<OrderSimpleResource> getOrdersByUserId(@PathVariable Long uid) {
+    public List<OrderSimpleResource> getOrdersByUserId(@PathVariable String uid) {
         return orderService.getSimpleOrdersByUserId(uid);
     }
 

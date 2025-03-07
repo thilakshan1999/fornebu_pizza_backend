@@ -10,11 +10,15 @@ public class OrderSimpleResource {
     private LocalDateTime createdAt;
     private LocalDateTime estimatedTime;
     private String orderStatus;
+    private  int itemCount;
+    private  double total;
+
+    private String userName;
 
     // Constructor
     public OrderSimpleResource(Long id, String uid, String paymentMethod, boolean isPaid,
                                LocalDateTime createdAt, LocalDateTime estimatedTime,
-                               String orderStatus) {
+                               String orderStatus,double total,int itemCount,String userName) {
         this.id = id;
         this.uid = uid;
         this.paymentMethod = paymentMethod;
@@ -22,6 +26,9 @@ public class OrderSimpleResource {
         this.createdAt = createdAt;
         this.estimatedTime = estimatedTime;
         this.orderStatus = orderStatus;
+        this.itemCount = itemCount;
+        this.total = total;
+        this.userName = userName;
     }
 
     // Getters and Setters
@@ -45,4 +52,28 @@ public class OrderSimpleResource {
 
     public String getOrderStatus() { return orderStatus; }
     public void setOrderStatus(String orderStatus) { this.orderStatus = orderStatus; }
+
+    public int getItemCount() {
+        return itemCount;
+    }
+
+    public void setItemCount(int itemCount) {
+        this.itemCount = itemCount;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 }
