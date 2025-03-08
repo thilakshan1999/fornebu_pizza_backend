@@ -18,18 +18,20 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
 
 
     @Query("SELECT new com.redhood.fornebu_pizza_backend.resources.OrderSimpleResource(o.id, o.uid, o.paymentMethod, " +
-            "o.isPaid, o.createdAt, o.estimatedTime, o.orderStatus,o.total,size(o.products),o.userName ) FROM Order o WHERE o.uid = :uid")
+            "o.isPaid, o.createdAt, o.estimatedTime, o.orderStatus, o.total, size(o.products), o.userName) " +
+            "FROM Order o WHERE o.uid = :uid ORDER BY o.createdAt DESC")
     List<OrderSimpleResource> findSimpleOrdersByUid(String uid);
 
 
     @Query("SELECT new com.redhood.fornebu_pizza_backend.resources.OrderSimpleResource(o.id, o.uid, o.paymentMethod, " +
-            "o.isPaid, o.createdAt, o.estimatedTime, o.orderStatus,o.total,size(o.products),o.userName) " +
-            "FROM Order o WHERE o.orderStatus = :orderStatus")
+            "o.isPaid, o.createdAt, o.estimatedTime, o.orderStatus, o.total, size(o.products), o.userName) " +
+            "FROM Order o WHERE o.orderStatus = :orderStatus ORDER BY o.createdAt DESC")
     List<OrderSimpleResource> findSimpleOrdersByOrderStatus(String orderStatus);
 
+
     @Query("SELECT new com.redhood.fornebu_pizza_backend.resources.OrderSimpleResource(o.id, o.uid, o.paymentMethod, " +
-            "o.isPaid, o.createdAt, o.estimatedTime, o.orderStatus,o.total,size(o.products),o.userName) " +
-            "FROM Order o")
+            "o.isPaid, o.createdAt, o.estimatedTime, o.orderStatus, o.total, size(o.products), o.userName) " +
+            "FROM Order o ORDER BY o.createdAt DESC")
     List<OrderSimpleResource> findAllSimpleOrders();
 
     @Modifying
